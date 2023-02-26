@@ -1,4 +1,6 @@
-﻿namespace FilmovizijaAPI
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace FilmovizijaAPI
 {
     public class Startup
     {
@@ -12,7 +14,18 @@
         public void ConfigureServices(IServiceCollection services)
         {
             // Add services to the container.
-
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });
+            services.AddCors(options =>
+            {
+                var frontendURL = Configuration.GetValue<string>("frontend_url");
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.WithOrigins(frontendURL).AllowAnyMethod().AllowAnyHeader();
+                });
+            });
             services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
@@ -32,6 +45,7 @@
 
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseCors();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
