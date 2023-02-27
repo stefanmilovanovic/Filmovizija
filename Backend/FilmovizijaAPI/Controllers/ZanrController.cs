@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using FilmovizijaAPI.DTOs;
 using FilmovizijaAPI.Entities;
+using FilmovizijaAPI.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FilmovizijaAPI.Controllers
 {
@@ -19,9 +21,11 @@ namespace FilmovizijaAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<ZanrDTO>> Get()
+        public async Task<ActionResult<List<ZanrDTO>>> Get([FromQuery] PaginacijaDTO paginacijaDTO)
         {
-            List<Zanr> zanrovi = context.Zanrovi.ToList();
+            var queryable = context.Zanrovi.AsQueryable();
+            await HttpContext.InsertParametresPaginationInHeader(queryable);
+            var zanrovi = await queryable.OrderBy(x => x.Naziv).Paginate(paginacijaDTO).ToListAsync();
             List<ZanrDTO> zanroviDTO = mapper.Map<List<ZanrDTO>>(zanrovi);
             return zanroviDTO;
         }
