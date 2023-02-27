@@ -4,9 +4,16 @@ import * as Yup from "yup";
 
 export default function ZanrForma(props: zanrFormaProps) {
   return (
-    <Formik initialValues={props.model} onSubmit={props.onSubmit} validationSchema={Yup.object({
-        naziv: Yup.string().required("Ovo polje je obavezno").max(50,"Naziv može imati najviše 50 karaktera"),
-    })}>
+    <Formik
+      initialValues={props.model}
+      onSubmit={props.onSubmit}
+      validationSchema={Yup.object({
+        naziv: Yup.string()
+          .required("Ovo polje je obavezno")
+          .max(50, "Naziv može imati najviše 50 karaktera")
+          .matches(/^[A-Z]{1}[A-z0-9 ]+$/, "Prvo slovo mora biti veliko"),
+      })}
+    >
       {(formikProps) => (
         <div className="row">
           <div className="col-sm-3"></div>
@@ -24,8 +31,15 @@ export default function ZanrForma(props: zanrFormaProps) {
               <ErrorMessage name="naziv">
                 {(poruka) => <p className="text-danger">{poruka}</p>}
               </ErrorMessage>
-              <br/>
-              <button disabled={formikProps.isSubmitting} type="submit" style={{width:"200px"}} className="btn btn-dark">{props.tip === "dodaj"?"Dodaj novi žanr":"Potvrdi izmene"}</button>
+              <br />
+              <button
+                disabled={formikProps.isSubmitting}
+                type="submit"
+                style={{ width: "200px" }}
+                className="btn btn-dark"
+              >
+                {props.tip === "dodaj" ? "Dodaj novi žanr" : "Potvrdi izmene"}
+              </button>
             </Form>
           </div>
           <div className="col-sm-3"></div>
@@ -36,7 +50,7 @@ export default function ZanrForma(props: zanrFormaProps) {
 }
 
 interface zanrFormaProps {
-    tip:"dodaj"|"izmeni";
+  tip: "dodaj" | "izmeni";
   model: zanrCreationDTO;
   onSubmit(
     values: zanrCreationDTO,

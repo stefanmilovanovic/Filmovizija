@@ -16,6 +16,8 @@ namespace FilmovizijaAPI
         public void ConfigureServices(IServiceCollection services)
         {
             // Add services to the container.
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
