@@ -1,4 +1,7 @@
+import axios from "axios";
+import React from "react";
 import { Link } from "react-router-dom";
+import { urlZanrovi } from "../../endpoints/endpoints";
 import { zanrCreationDTO } from "../interfejsi/zanr.model";
 import ZanrForma from "./ZanrForma";
 

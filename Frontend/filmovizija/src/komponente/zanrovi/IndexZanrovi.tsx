@@ -1,6 +1,16 @@
+import axios from "axios";
+import React from "react";
 import { Link } from "react-router-dom";
+import { urlZanrovi } from "../../endpoints/endpoints";
 
 export default function IndexZanrovi() {
+
+  React.useEffect(()=>{
+    axios.get(urlZanrovi).then(res=>{
+        if(res.status===200) console.log(res.data);
+    })
+  },[])
+
   return (
     <>
       <div style={{ backgroundColor: "#D3F4FF" }}>

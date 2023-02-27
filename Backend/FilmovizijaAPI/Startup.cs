@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FilmovizijaAPI.APIBehaviour;
+using FilmovizijaAPI.Filters;
+using Microsoft.EntityFrameworkCore;
 
 namespace FilmovizijaAPI
 {
@@ -26,7 +28,10 @@ namespace FilmovizijaAPI
                     builder.WithOrigins(frontendURL).AllowAnyMethod().AllowAnyHeader();
                 });
             });
-            services.AddControllers();
+            services.AddControllers(options =>
+            {
+                options.Filters.Add(typeof(ParseBadRequest)); // Dodavanje filtera
+            }).ConfigureApiBehaviorOptions(BadRequestBehaviour.Parse);
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>

@@ -25,7 +25,7 @@ export default function ZanrForma(props: zanrFormaProps) {
                 {(poruka) => <p className="text-danger">{poruka}</p>}
               </ErrorMessage>
               <br/>
-              <button type="submit" style={{width:"200px"}} className="btn btn-dark">{props.tip === "dodaj"?"Dodaj novi žanr":"Potvrdi izmene"}</button>
+              <button disabled={formikProps.isSubmitting} type="submit" style={{width:"200px"}} className="btn btn-dark">{props.tip === "dodaj"?"Dodaj novi žanr":"Potvrdi izmene"}</button>
             </Form>
           </div>
           <div className="col-sm-3"></div>
