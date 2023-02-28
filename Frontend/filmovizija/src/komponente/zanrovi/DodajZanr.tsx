@@ -26,7 +26,7 @@ export default function DodajZanr() {
 
   return (
     <>
-      <div style={{ backgroundColor: "#D3F4FF" }}>
+      <div style={{ backgroundColor: "#00bb8c" }}>
         <div className="container">
           <br />
           <div className="row">

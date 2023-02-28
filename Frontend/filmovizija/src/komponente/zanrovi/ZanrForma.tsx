@@ -19,7 +19,7 @@ export default function ZanrForma(props: zanrFormaProps) {
           <div className="col-sm-3"></div>
           <div className="col-sm-6">
             <Form>
-              <label className="form-label fw-bolder text-dark" htmlFor="naziv">
+              <label className="form-label fw-bolder" htmlFor="naziv">
                 Uneti naziv nove kategorije:
               </label>
               <Field
@@ -36,7 +36,7 @@ export default function ZanrForma(props: zanrFormaProps) {
                 disabled={formikProps.isSubmitting}
                 type="submit"
                 style={{ width: "200px" }}
-                className="btn btn-dark"
+                className="btn btn-success"
               >
                 {props.tip === "dodaj" ? "Dodaj novi žanr" : "Potvrdi izmene"}
               </button>

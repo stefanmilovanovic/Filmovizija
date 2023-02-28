@@ -9,7 +9,7 @@ import Paginacija2 from "../ostalo/Paginacija2";
 export default function IndexZanrovi() {
   const [zanrovi, setZanrovi] = React.useState<zanrDTO[]>();
   const [ukupnoStrana, setUkupnoStrana] = React.useState(0);
-  const [rezultataPoStrani, setRezultataPoStrani] = React.useState(5);
+  const [rezultataPoStrani, setRezultataPoStrani] = React.useState(2);
   const [strana, setStrana] = React.useState(1);
 
   React.useEffect(() => {
@@ -24,7 +24,7 @@ export default function IndexZanrovi() {
 
   return (
     <>
-      <div style={{ backgroundColor: "#D3F4FF" }}>
+      <div style={{ backgroundColor: "#00bb8c" }}>
         <div className="container">
           <br />
           <div className="row">
@@ -45,7 +45,7 @@ export default function IndexZanrovi() {
       <div className="container">
         <br/>
         <br/>
-        <Paginacija2
+        <Paginacija
           trenutnaStrana={strana}
           ukupnoStrana={ukupnoStrana}
           onChange={(novaStrana) => setStrana(novaStrana)}

@@ -3,7 +3,7 @@ import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Navigacija from "./elementi/Navigacija";
 import rute from "./rute/rute";
-import "./css/Paginacija.css";
+//import "./css/Paginacija.css";
 
 function App() {
   return (
