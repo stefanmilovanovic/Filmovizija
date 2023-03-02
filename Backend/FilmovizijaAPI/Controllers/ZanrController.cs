@@ -25,16 +25,50 @@ namespace FilmovizijaAPI.Controllers
         {
             var queryable = context.Zanrovi.AsQueryable();
             await HttpContext.InsertParametresPaginationInHeader(queryable);
-            var zanrovi = await queryable.OrderBy(x => x.Naziv).Paginate(paginacijaDTO).ToListAsync();
+            var zanrovi = await queryable.OrderBy(zanr => zanr.Naziv).Paginate(paginacijaDTO).ToListAsync();
             List<ZanrDTO> zanroviDTO = mapper.Map<List<ZanrDTO>>(zanrovi);
             return zanroviDTO;
         }
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<ZanrDTO>> Get(int id)
+        {
+            var zanr = await context.Zanrovi.FirstOrDefaultAsync(zanr => zanr.Id == id);
+            if(zanr == null)
+            {
+                return NotFound();
+            }
+            return mapper.Map<ZanrDTO>(zanr);
+        }
         [HttpPost]
-        public ActionResult Post([FromBody] ZanrCreationDTO zanrCreationDTO)
+        public async Task<ActionResult> Post([FromBody] ZanrCreationDTO zanrCreationDTO)
         {
             var zanr = mapper.Map<Zanr>(zanrCreationDTO);
             context.Zanrovi.Add(zanr);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
+            return NoContent();
+        }
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> Put(int id,[FromBody] ZanrCreationDTO zanrCreationDTO)
+        {
+            var zanr = await context.Zanrovi.FirstOrDefaultAsync(zanr => zanr.Id == id);
+            if(zanr == null)
+            {
+                return NotFound();
+            }
+            zanr = mapper.Map(zanrCreationDTO, zanr);
+            await context.SaveChangesAsync();
+            return NoContent();
+        }
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var daLiPostoji = await context.Zanrovi.AnyAsync(zanr=>zanr.Id==id);
+            if (!daLiPostoji)
+            {
+                return NotFound();
+            }
+            context.Zanrovi.Remove(new Zanr() { Id = id });
+            await context.SaveChangesAsync();
             return NoContent();
         }
     }

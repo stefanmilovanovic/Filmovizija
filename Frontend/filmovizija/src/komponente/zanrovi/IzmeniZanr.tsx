@@ -1,9 +1,35 @@
-import { Link, useParams } from "react-router-dom";
+import axios, { AxiosResponse } from "axios";
+import React from "react";
+import { Link, useHistory, useParams } from "react-router-dom";
+import { urlZanrovi } from "../../endpoints/endpoints";
 import { zanrCreationDTO } from "../interfejsi/zanr.model";
+import Ucitavanje from "../ostalo/Ucitavanje";
 import ZanrForma from "./ZanrForma";
 
 export default function IzmeniZanr() {
   const { id }: any = useParams();
+  const [zanr, setZanr] = React.useState<zanrCreationDTO>();
+  const [errors, setErrors] = React.useState<string[]>([]);
+  const history = useHistory();
+
+  React.useEffect(() => {
+    axios
+      .get(`${urlZanrovi}/${id}`)
+      .then((response: AxiosResponse<zanrCreationDTO>) => {
+        setZanr(response.data);
+      });
+  }, [id]);
+
+  async function izmeni(zanrZaIzmenu: zanrCreationDTO) {
+    try {
+      await axios.put(`${urlZanrovi}/${id}`, zanrZaIzmenu);
+      history.push("/zanrovi");
+    } catch (error: any) {
+      if (error && error.response) {
+        setErrors(error.response.data);
+      }
+    }
+  }
 
   const zanrObjekat: zanrCreationDTO = {
     naziv: "Akcija",
@@ -11,7 +37,7 @@ export default function IzmeniZanr() {
 
   return (
     <>
-      <div style={{ backgroundColor: "#D3F4FF" }}>
+      <div style={{ backgroundColor: "#00bb8c" }}>
         <div className="container">
           <br />
           <div className="row">
@@ -33,11 +59,15 @@ export default function IzmeniZanr() {
       </div>
       <div className="container">
         <div style={{ marginTop: "8vh" }}>
-          <ZanrForma
-            tip="izmeni"
-            model={zanrObjekat}
-            onSubmit={(values) => console.log(values)}
-          />
+          {zanr ? (
+            <ZanrForma
+              tip="izmeni"
+              model={zanr}
+              onSubmit={async (zanrPodaci) => izmeni(zanrPodaci)}
+            />
+          ) : (
+            <Ucitavanje />
+          )}
         </div>
       </div>
     </>

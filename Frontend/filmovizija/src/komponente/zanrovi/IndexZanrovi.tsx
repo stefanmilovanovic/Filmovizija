@@ -5,14 +5,20 @@ import { urlZanrovi } from "../../endpoints/endpoints";
 import { zanrDTO } from "../interfejsi/zanr.model";
 import Paginacija from "../ostalo/Paginacija";
 import Paginacija2 from "../ostalo/Paginacija2";
+import PotvrdaSweetAlert from "../ostalo/PotvrdaSweetAlert";
+import RezultataPoStrani from "../ostalo/RezultataPoStrani";
 
 export default function IndexZanrovi() {
   const [zanrovi, setZanrovi] = React.useState<zanrDTO[]>();
   const [ukupnoStrana, setUkupnoStrana] = React.useState(0);
-  const [rezultataPoStrani, setRezultataPoStrani] = React.useState(2);
+  const [rezultataPoStrani, setRezultataPoStrani] = React.useState(5);
   const [strana, setStrana] = React.useState(1);
 
   React.useEffect(() => {
+    ucitajPodatke();
+  }, [strana, rezultataPoStrani]);
+
+  function ucitajPodatke() {
     axios
       .get(urlZanrovi, { params: { strana, rezultataPoStrani } })
       .then((response: AxiosResponse<zanrDTO[]>) => {
@@ -20,7 +26,18 @@ export default function IndexZanrovi() {
         setUkupnoStrana(Math.ceil(ukupnoRezultata / rezultataPoStrani));
         setZanrovi(response.data);
       });
-  }, [strana, rezultataPoStrani]);
+  }
+
+  async function izbrisiZanr(id: number) {
+    try {
+      await axios.delete(`${urlZanrovi}/${id}`);
+      ucitajPodatke();
+    } catch (error: any) {
+      if (error && error.response) {
+        console.log(error.response.data);
+      }
+    }
+  }
 
   return (
     <>
@@ -43,21 +60,74 @@ export default function IndexZanrovi() {
         <br />
       </div>
       <div className="container">
-        <br/>
-        <br/>
-        <Paginacija
-          trenutnaStrana={strana}
-          ukupnoStrana={ukupnoStrana}
-          onChange={(novaStrana) => setStrana(novaStrana)}
-        />
-        <br/>
-        <div className="list-group">
-          {zanrovi?.map((zanr)=>{
-            return(
-              <a href="#" key={zanr.id} className="list-group-item list-group-item-action">{zanr.naziv}</a>
-            )
-          })}
+        <br />
+        <br />
+        <div className="row">
+          <div className="col-sm-4">
+            <RezultataPoStrani
+              onChange={(brojRezultata) => {
+                setStrana(1);
+                setRezultataPoStrani(brojRezultata);
+              }}
+            />
+          </div>
+          <div className="col-sm-8">
+            <Paginacija
+              trenutnaStrana={strana}
+              ukupnoStrana={ukupnoStrana}
+              onChange={(novaStrana) => setStrana(novaStrana)}
+            />
+          </div>
         </div>
+        <br />
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Broj</th>
+              <th>Naziv</th>
+              <th style={{ textAlign: "right", paddingRight: "60px" }}>
+                Opcije
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {zanrovi?.map((zanr, index) => {
+              return (
+                <tr key={zanr.id}>
+                  <td>{index + 1}</td>
+                  <td
+                    style={{
+                      maxWidth: "50vw",
+                      overflow: "hidden",
+                      overflowWrap: "break-word",
+                    }}
+                  >
+                    {zanr.naziv}
+                  </td>
+                  <td>
+                    <div className="d-grid gap-2 d-md-flex justify-content-md-end">
+                      <Link
+                        className="btn btn-primary"
+                        to={`/zanrovi/izmeni/${zanr.id}`}
+                      >
+                        Izmeni
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          PotvrdaSweetAlert(() => izbrisiZanr(zanr.id))
+                        }
+                        className="btn btn-secondary"
+                      >
+                        Izbriši
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </>
   );
