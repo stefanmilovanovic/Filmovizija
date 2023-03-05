@@ -39,6 +39,13 @@ namespace FilmovizijaAPI.Controllers
             }
             return mapper.Map<ZanrDTO>(zanr);
         }
+        [HttpGet("svi")]
+        public async Task<ActionResult<List<ZanrDTO>>> Get()
+        {
+            var zanrovi = await context.Zanrovi.OrderBy(zanr => zanr.Naziv).ToListAsync();
+            return mapper.Map<List<ZanrDTO>>(zanrovi);
+        }
+
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] ZanrCreationDTO zanrCreationDTO)
         {

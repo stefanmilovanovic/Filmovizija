@@ -33,8 +33,33 @@ export default function Navigacija() {
               </NavLink>
             </li>
             <li className="nav-item">
+              <NavLink className="nav-link" to="/filmovi/dodaj">
+                DODAJ FILM
+              </NavLink>
+            </li>
+            <li className="nav-item">
               <NavLink className="nav-link" to="/zanrovi">
                 ŽANROVI
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/glumci">
+                GLUMCI
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/bioskopi">
+                BIOSKOPI
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/filmovi">
+                FILMOVI
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/filmovi/filter">
+                FILTER FILMOVA
               </NavLink>
             </li>
           </ul>

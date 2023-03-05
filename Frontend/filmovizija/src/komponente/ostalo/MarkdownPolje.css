@@ -1,0 +1,15 @@
+
+
+.form-markdown textarea{
+    height: 500px;
+    margin-right: 15px;
+    width: 100%;
+}
+
+.form-markdown .markdown-container{
+    overflow: hidden;
+    word-break: normal;
+    width: 100%;
+    border: 1px dashed #fff;
+    height:500px;
+}

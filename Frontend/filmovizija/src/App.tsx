@@ -3,13 +3,15 @@ import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Navigacija from "./elementi/Navigacija";
 import rute from "./rute/rute";
+import Footer from "./elementi/Footer";
 //import "./css/Paginacija.css";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Navigacija />
-      <Switch>
+    <div className="d-flex flex-column min-vh-100">
+      <BrowserRouter>
+        <Navigacija />
+        <Switch>
           {rute.map((ruta) => {
             return (
               <Route
@@ -20,8 +22,10 @@ function App() {
               />
             );
           })}
-      </Switch>
-    </BrowserRouter>
+        </Switch>
+        <Footer />
+      </BrowserRouter>
+    </div>
   );
 }
 

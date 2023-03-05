@@ -1,6 +1,11 @@
 ﻿using FilmovizijaAPI.APIBehaviour;
 using FilmovizijaAPI.Filters;
 using Microsoft.EntityFrameworkCore;
+using MoviesAPI.Helpers;
+using NetTopologySuite.Geometries;
+using NetTopologySuite;
+using AutoMapper;
+using FilmovizijaAPI.Helpers;
 
 namespace FilmovizijaAPI
 {
@@ -16,11 +21,10 @@ namespace FilmovizijaAPI
         public void ConfigureServices(IServiceCollection services)
         {
             // Add services to the container.
-            services.AddAutoMapper(typeof(Startup));
-
+            services.AddAutoMapper(typeof(Startup));  
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), sqlOptions => sqlOptions.UseNetTopologySuite());
             });
             services.AddCors(options =>
             {
@@ -40,6 +44,14 @@ namespace FilmovizijaAPI
             {
                 c.SwaggerDoc("v1", new() { Title = "FilmovizijaAPI", Version = "v1" });
             });
+            services.AddSingleton(provider => new MapperConfiguration(config =>
+            {
+                var geometryFactory = provider.GetRequiredService<GeometryFactory>();
+                config.AddProfile(new AutoMapperProfiles(geometryFactory));
+            }).CreateMapper());
+            services.AddSingleton<GeometryFactory>(NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326));
+            services.AddScoped<IFileStorageService, InAppStorageService>();
+            services.AddHttpContextAccessor();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -51,6 +63,7 @@ namespace FilmovizijaAPI
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles(); 
             app.UseRouting();
             app.UseCors();
             app.UseAuthorization();
