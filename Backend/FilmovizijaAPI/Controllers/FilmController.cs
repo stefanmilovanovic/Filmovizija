@@ -74,7 +74,7 @@ namespace FilmovizijaAPI.Controllers
         {
             List<Film> filmovi = context.Filmovi.Where(film => film.PrikazujeSe)
                 .OrderBy(film => film.DatumIzlaska)
-                .Take(6).ToList();
+                .Take(4).ToList();
             return mapper.Map<List<FilmDTO>>(filmovi);
         }
 
@@ -85,7 +85,7 @@ namespace FilmovizijaAPI.Controllers
             List<Film> filmovi = context.Filmovi
                 .Where(film => film.DatumIzlaska > danas)
                 .OrderBy(film => film.DatumIzlaska)
-                .Take(6).ToList();
+                .Take(4).ToList();
             return mapper.Map<List<FilmDTO>>(filmovi);
         }
         [HttpGet]

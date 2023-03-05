@@ -12,7 +12,7 @@ export default function Navigacija() {
             height="34"
             style={{ marginRight: "10px", marginTop: "-10px" }}
           />
-          <span style={{ fontSize: "25px" }}>FILMOVIZIJA</span>
+          <span style={{ fontSize: "25px",fontStyle:"italic" }}>FILMOVIZIJA</span>
         </NavLink>
         <button
           className="navbar-toggler"

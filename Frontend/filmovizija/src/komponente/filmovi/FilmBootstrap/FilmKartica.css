@@ -1,0 +1,7 @@
+.moj-stil-kartica{
+    transition: 0.3s;
+}
+.moj-stil-kartica img:hover{
+    transition: 0.3s;
+    opacity: 0.8;
+}
