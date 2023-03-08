@@ -6,6 +6,10 @@ using NetTopologySuite.Geometries;
 using NetTopologySuite;
 using AutoMapper;
 using FilmovizijaAPI.Helpers;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace FilmovizijaAPI
 {
@@ -21,6 +25,7 @@ namespace FilmovizijaAPI
         public void ConfigureServices(IServiceCollection services)
         {
             // Add services to the container.
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddAutoMapper(typeof(Startup));  
             services.AddDbContext<ApplicationDbContext>(options =>
             {
@@ -38,7 +43,6 @@ namespace FilmovizijaAPI
             {
                 options.Filters.Add(typeof(ParseBadRequest)); // Dodavanje filtera
             }).ConfigureApiBehaviorOptions(BadRequestBehaviour.Parse);
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
             {
@@ -52,6 +56,21 @@ namespace FilmovizijaAPI
             services.AddSingleton<GeometryFactory>(NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326));
             services.AddScoped<IFileStorageService, InAppStorageService>();
             services.AddHttpContextAccessor();
+            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(Configuration["keyjwt"])),
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

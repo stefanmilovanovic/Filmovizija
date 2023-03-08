@@ -1,0 +1,7 @@
+.filmKlik{
+    cursor:pointer;
+}
+
+.filmKlik:hover{
+    background-color: #3e3e3e;
+}

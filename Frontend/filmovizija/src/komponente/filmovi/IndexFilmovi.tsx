@@ -1,8 +1,12 @@
+import { useHistory } from "react-router-dom";
 import { urlFilmovi } from "../../endpoints/endpoints";
 import { filmDTO } from "../interfejsi/film.model";
 import UniverzalnaKomponentaZaPrikaz from "../univerzalneKomponente/UniverzalnaKomponentaZaPrikaz";
+import css from "./cssFilmovi/IndexFilmovi.module.css";
 
 export default function IndexFilmovi() {
+  const history = useHistory();
+
   return (
     <UniverzalnaKomponentaZaPrikaz<filmDTO>
       url={urlFilmovi}
@@ -24,10 +28,14 @@ export default function IndexFilmovi() {
           </thead>
           <tbody>
             {filmovi?.map((film, index) => (
-              <tr key={film.id}>
+              <tr
+                className={css.filmKlik}
+                onClick={() => history.push(`/film/${film.id}`)}
+                key={film.id}
+              >
                 <td>{index + 1}</td>
                 <td>{film.naslov}</td>
-                <td>{film.datumIzlaska.toString().split('T')[0]}</td>
+                <td>{film.datumIzlaska.toString().split("T")[0]}</td>
                 <td>{opcije(`filmovi/izmeni/${film.id}`, film.id)}</td>
               </tr>
             ))}

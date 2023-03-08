@@ -1,7 +1,17 @@
-import { NavLink } from "react-router-dom";
+import React from "react";
+import { Link, NavLink } from "react-router-dom";
+import AutentifikacijaContext from "../auth/AutentifikacijaContext";
+import Autorizacija from "../auth/Autorizacija";
+import { logout } from "../auth/handleJWT";
 import Logo from "../slike/logo.png";
 
 export default function Navigacija() {
+  const { update, claims } = React.useContext(AutentifikacijaContext);
+
+  function korisnikovEmail(): string {
+    return claims.filter((x) => x.name === "email")[0]?.value;
+  }
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark moj_stil_navigacija">
       <div className="container">
@@ -12,7 +22,9 @@ export default function Navigacija() {
             height="34"
             style={{ marginRight: "10px", marginTop: "-10px" }}
           />
-          <span style={{ fontSize: "25px",fontStyle:"italic" }}>FILMOVIZIJA</span>
+          <span style={{ fontSize: "25px", fontStyle: "italic" }}>
+            FILMOVIZIJA
+          </span>
         </NavLink>
         <button
           className="navbar-toggler"
@@ -33,36 +45,74 @@ export default function Navigacija() {
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/filmovi/dodaj">
-                DODAJ FILM
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/zanrovi">
-                ŽANROVI
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/glumci">
-                GLUMCI
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/bioskopi">
-                BIOSKOPI
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/filmovi">
-                FILMOVI
-              </NavLink>
-            </li>
-            <li className="nav-item">
               <NavLink className="nav-link" to="/filmovi/filter">
                 FILTER FILMOVA
               </NavLink>
             </li>
+            <Autorizacija
+              rola="admin"
+              autorizovan={
+                <>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/filmovi/dodaj">
+                      DODAJ FILM
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/zanrovi">
+                      ŽANROVI
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/glumci">
+                      GLUMCI
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/bioskopi">
+                      BIOSKOPI
+                    </NavLink>
+                  </li>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/filmovi">
+                      FILMOVI
+                    </NavLink>
+                  </li>
+                </>
+              }
+            />
           </ul>
+          <div className="d-flex">
+            <Autorizacija
+              autorizovan={
+                <>
+                  <button className="btn btn-dark" disabled>
+                    {korisnikovEmail()}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      logout();
+                      update([]);
+                    }}
+                    className="btn btn-primary ms-3"
+                  >
+                    ODJAVI SE
+                  </button>
+                </>
+              }
+              nijeAutorizovan={
+                <>
+                  <Link to="/registracija" className="btn btn-dark">
+                    REGISTRACIJA
+                  </Link>
+                  <Link to="/prijava" className="btn btn-success ms-3">
+                    PRIJAVA
+                  </Link>
+                </>
+              }
+            />
+          </div>
         </div>
       </div>
     </nav>

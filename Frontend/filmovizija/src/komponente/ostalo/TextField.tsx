@@ -7,6 +7,7 @@ export default function TextField(props: textFieldProps) {
         {props.prikaz}
       </label>
       <Field
+        type={props.tip === "tekst" ? "text" : "password"}
         name={props.nazivPolja}
         id={props.nazivPolja}
         className="form-control"
@@ -22,4 +23,9 @@ export default function TextField(props: textFieldProps) {
 interface textFieldProps {
   nazivPolja: string;
   prikaz: string;
+  tip: "tekst" | "sifra";
 }
+
+TextField.defaultProps = {
+  tip: "tekst",
+};

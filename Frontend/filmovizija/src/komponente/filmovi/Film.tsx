@@ -1,4 +1,4 @@
-import css from "./Film.module.css";
+import css from "./cssFilmovi/Film.module.css";
 import { filmDTO } from "../interfejsi/film.model";
 import { Link } from "react-router-dom";
 

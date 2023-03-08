@@ -1,7 +1,7 @@
 import { filmDTO } from "../interfejsi/film.model";
 import GenericList from "../ostalo/GenericList";
 import Film from "./Film";
-import css from "./ListaFilmova.module.css";
+import css from "./cssFilmovi//ListaFilmova.module.css";
 
 export default function ListaFilmova(props:listaFilmovaProps){
 

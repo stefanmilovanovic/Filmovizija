@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { Field, Form, Formik } from "formik";
 import React from "react";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { urlFilmovi, urlZanrovi } from "../../endpoints/endpoints";
 import { filmDTO } from "../interfejsi/film.model";
 import { zanrDTO } from "../interfejsi/zanr.model";

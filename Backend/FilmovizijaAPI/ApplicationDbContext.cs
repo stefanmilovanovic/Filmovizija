@@ -1,10 +1,11 @@
 ﻿using FilmovizijaAPI.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
 
 namespace FilmovizijaAPI
 {
-    public class ApplicationDbContext:DbContext
+    public class ApplicationDbContext:IdentityDbContext
     {
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
