@@ -23,5 +23,6 @@ namespace FilmovizijaAPI
         public DbSet<FilmoviBioskopi> FilmoviBioskopi { get; set; }
         public DbSet<FilmoviGlumci> FilmoviGlumci { get; set; }
         public DbSet<FilmoviZanrovi> FilmoviZanrovi { get; set; }
+        public DbSet<Ocene> Ocene { get; set; }
     }
 }

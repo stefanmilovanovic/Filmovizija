@@ -13,5 +13,7 @@
         public List<ZanrDTO> Zanrovi { get; set; }
         public List<BioskopDTO> Bioskopi { get; set; }
         public List<GlumciFilmDTO> Glumci { get; set; }
+        public double ProsecnaOcena { get; set; }
+        public int KorisnikovaOcena { get; set; }
     }
 }

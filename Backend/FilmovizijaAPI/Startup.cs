@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace FilmovizijaAPI
 {
@@ -17,6 +18,7 @@ namespace FilmovizijaAPI
     {
         public Startup(IConfiguration configuration)
         {
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // Resava problem sa mailom prilikom ocenjivanja
             Configuration = configuration;
         }
 
@@ -70,7 +72,10 @@ namespace FilmovizijaAPI
                     ClockSkew = TimeSpan.Zero
                 };
             });
-
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("IsAdmin", policy => policy.RequireClaim("role", "admin"));
+            });
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

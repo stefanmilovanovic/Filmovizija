@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FilmovizijaAPI.DTOs;
 using FilmovizijaAPI.Entities;
+using Microsoft.AspNetCore.Identity;
 using NetTopologySuite.Geometries;
 
 namespace FilmovizijaAPI.Helpers
@@ -29,6 +30,8 @@ namespace FilmovizijaAPI.Helpers
                 .ForMember(x => x.Zanrovi, options => options.MapFrom(MapFilmoviZanrovi))
                 .ForMember(x => x.Bioskopi, options => options.MapFrom(MapFilmoviBioskopi))
                 .ForMember(x => x.Glumci, options => options.MapFrom(MapFilmoviGlumci));
+
+            CreateMap<IdentityUser, KorisnikDTO>();
         }
         private List<GlumciFilmDTO> MapFilmoviGlumci(Film film, FilmDTO filmDTO)
         {

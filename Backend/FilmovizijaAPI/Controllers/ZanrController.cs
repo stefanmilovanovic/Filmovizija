@@ -2,6 +2,8 @@
 using FilmovizijaAPI.DTOs;
 using FilmovizijaAPI.Entities;
 using FilmovizijaAPI.Helpers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +12,7 @@ namespace FilmovizijaAPI.Controllers
 {
     [Route("api/zanrovi")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "IsAdmin")]
     public class ZanrController : ControllerBase
     {
         private readonly ApplicationDbContext context;
@@ -40,6 +43,7 @@ namespace FilmovizijaAPI.Controllers
             return mapper.Map<ZanrDTO>(zanr);
         }
         [HttpGet("svi")]
+        [AllowAnonymous]
         public async Task<ActionResult<List<ZanrDTO>>> Get()
         {
             var zanrovi = await context.Zanrovi.OrderBy(zanr => zanr.Naziv).ToListAsync();

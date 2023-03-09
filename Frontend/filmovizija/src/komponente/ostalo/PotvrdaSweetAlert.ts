@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 export default function PotvrdaSweetAlert(
     onConfirm: any,
     title: string = "Da li ste sigurni?",
-    confirmButtonText: string = "Izbriši",
+    confirmButtonText: string = "Potvrdi",
     cancelButtonText: string = "Otkaži",
 ) {
     Swal.fire({

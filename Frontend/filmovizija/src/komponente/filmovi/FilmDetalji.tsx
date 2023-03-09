@@ -2,10 +2,12 @@ import axios, { AxiosResponse } from "axios";
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import { Link, useParams } from "react-router-dom";
-import { urlFilmovi } from "../../endpoints/endpoints";
+import Swal from "sweetalert2";
+import { urlFilmovi, urlOcene } from "../../endpoints/endpoints";
 import { coordinateDTO } from "../interfejsi/coordinates.model";
 import { filmDTO } from "../interfejsi/film.model";
 import Map from "../ostalo/Map";
+import Ocene from "../ostalo/Ocene";
 import Ucitavanje from "../ostalo/Ucitavanje";
 
 export default function FilmDetalji() {
@@ -47,27 +49,51 @@ export default function FilmDetalji() {
     return [];
   }
 
+  function ocenjivanje(ocena:number){
+    axios.post(urlOcene,{ocena:ocena,filmId:id}).then(()=>{
+      Swal.fire({icon:"success",title:"Ocenili ste film!"});
+    })
+  }
+
   return film ? (
     <>
       <div style={{ backgroundColor: "#00bb8c" }}>
         <div className="container">
           <br />
-          <h2>
-            {film?.naslov} ({film?.datumIzlaska.getFullYear()})
-          </h2>
-          {film.zanrovi?.map((zanr) => (
-            <Link
-              key={zanr.id}
-              className="btn btn-primary rounded-pill"
-              to={`/filmovi/filter?zanrId=${zanr.id}`}
-              style={{ marginRight: "5px" }}
-            >
-              {zanr.naziv}
-            </Link>
-          ))}
-          | Datum izlaska: {film.datumIzlaska.toLocaleDateString()}
-          <br />
-          <br />
+          <div className="row">
+            <div className="col-md-8">
+              <h2>
+                {film?.naslov} ({film?.datumIzlaska.getFullYear()})
+              </h2>
+              {film.zanrovi?.map((zanr) => (
+                <Link
+                  key={zanr.id}
+                  className="btn btn-primary rounded-pill"
+                  to={`/filmovi/filter?zanrId=${zanr.id}`}
+                  style={{ marginRight: "5px" }}
+                >
+                  {zanr.naziv}
+                </Link>
+              ))}
+              | Datum izlaska: {film.datumIzlaska.toLocaleDateString()}
+              <br />
+              <br />
+            </div>
+            <div className="col-md-4">
+              <br />
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <span className="fs-4 ">Oceni film: </span>
+                <span style={{width:"15px"}}></span>
+                <Ocene
+                  najvecaOcena={5}
+                  selektovanaOcena={film.korisnikovaOcena}
+                  onChange={ocenjivanje}
+                /><span style={{width:"10px"}}></span>
+                <span>({film.prosecnaOcena} &#9733;)</span>
+              </div>
+              <br/>
+            </div>
+          </div>
         </div>
       </div>
       <div className="container">
@@ -75,8 +101,8 @@ export default function FilmDetalji() {
         <div className="row">
           <div className="col-sm-3">
             <img src={film.poster} style={{ width: "100%" }} alt="poster" />
-            <br/>
-            <br/>
+            <br />
+            <br />
           </div>
           <div className="col-sm-7">
             {film.trailer ? (
@@ -93,7 +119,7 @@ export default function FilmDetalji() {
             ) : null}
           </div>
         </div>
-        
+
         <hr />
         {film.rezime ? (
           <div>

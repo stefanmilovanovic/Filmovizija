@@ -1,3 +1,4 @@
+import IndexKorisnici from "../auth/IndexKorisnici";
 import Prijava from "../auth/Prijava";
 import Registracija from "../auth/Registracija";
 import DodajBioskop from "../komponente/bioskopi/DodajBioskop";
@@ -39,8 +40,10 @@ const rute = [
 
     { path: "/film/:id(\\d+)", component: FilmDetalji },
 
-    {path:"/registracija",component:Registracija},
-    {path:"/prijava",component:Prijava},
+    { path: "/registracija", component: Registracija },
+    { path: "/prijava", component: Prijava },
+
+    { path: "/korisnici", component: IndexKorisnici, isAdmin:true },
 
     { path: "*", component: Greska404 },
 ]

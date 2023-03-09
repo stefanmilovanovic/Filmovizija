@@ -13,6 +13,8 @@ export interface filmDTO{
     zanrovi: zanrDTO[];
     bioskopi: bioskopDTO[];
     glumci: glumacFilmDTO[];
+    korisnikovaOcena:number;
+    prosecnaOcena:number;
 }
 
 export interface filmCreationDTO{

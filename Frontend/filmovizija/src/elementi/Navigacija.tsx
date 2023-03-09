@@ -46,19 +46,69 @@ export default function Navigacija() {
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" to="/filmovi/filter">
-                FILTER FILMOVA
+                PRETRAGA
               </NavLink>
             </li>
             <Autorizacija
               rola="admin"
               autorizovan={
                 <>
-                  <li className="nav-item">
+                  {/*<li className="nav-item">
                     <NavLink className="nav-link" to="/filmovi/dodaj">
                       DODAJ FILM
                     </NavLink>
+              </li>*/}
+                  <li className="nav-item dropdown">
+                    <a
+                      className="nav-link dropdown-toggle"
+                      href="#"
+                      id="navbarDropdown"
+                      role="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      ADMIN OPCIJE
+                    </a>
+                    <ul
+                      className="dropdown-menu"
+                      aria-labelledby="navbarDropdown"
+                    >
+                      <li>
+                        <Link className="dropdown-item" to="/zanrovi">
+                          ŽANROVI
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className="dropdown-item" to="/glumci">
+                          GLUMCI
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className="dropdown-item" to="/bioskopi">
+                          BIOSKOPI
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className="dropdown-item" to="/filmovi">
+                          FILMOVI
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className="dropdown-item" to="/korisnici">
+                          KORISNICI
+                        </Link>
+                      </li>
+                      <li>
+                        <hr className="dropdown-divider" />
+                      </li>
+                      <li>
+                        <Link className="dropdown-item" to="/filmovi/dodaj">
+                          DODAJ FILM
+                        </Link>
+                      </li>
+                    </ul>
                   </li>
-                  <li className="nav-item">
+                  {/*<li className="nav-item">
                     <NavLink className="nav-link" to="/zanrovi">
                       ŽANROVI
                     </NavLink>
@@ -78,6 +128,11 @@ export default function Navigacija() {
                       FILMOVI
                     </NavLink>
                   </li>
+                  <li className="nav-item">
+                    <NavLink className="nav-link" to="/korisnici">
+                      KORISNICI
+                    </NavLink>
+            </li>*/}
                 </>
               }
             />

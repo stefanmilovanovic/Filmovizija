@@ -2,7 +2,9 @@
 using FilmovizijaAPI.DTOs;
 using FilmovizijaAPI.Entities;
 using FilmovizijaAPI.Helpers;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MoviesAPI.Helpers;
@@ -11,18 +13,21 @@ namespace FilmovizijaAPI.Controllers
 {
     [Route("api/filmovi")]
     [ApiController]
+    [Authorize(AuthenticationSchemes =JwtBearerDefaults.AuthenticationScheme,Policy = "IsAdmin")]
     public class FilmController : ControllerBase
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
         private readonly IFileStorageService fileStorageService;
+        private readonly UserManager<IdentityUser> userManager;
         private readonly string container = "filmovi";
 
-        public FilmController(ApplicationDbContext context, IMapper mapper, IFileStorageService fileStorageService)
+        public FilmController(ApplicationDbContext context, IMapper mapper, IFileStorageService fileStorageService,UserManager<IdentityUser> userManager)
         {
             this.context = context;
             this.mapper = mapper;
             this.fileStorageService = fileStorageService;
+            this.userManager = userManager;
         }
         [HttpGet("PostGet")]
         public async Task<ActionResult<FilmPostGetDTO>> PostGet()
@@ -36,6 +41,7 @@ namespace FilmovizijaAPI.Controllers
             return new FilmPostGetDTO() { Bioskopi = bioskopiDTO, Zanrovi = zanroviDTO };
         }
         [HttpGet("{id:int}")]
+        [AllowAnonymous]
         public async Task<ActionResult<FilmDTO>> Get(int id)
         {
             var film = await context.Filmovi.Include(x => x.FilmoviZanrovi).ThenInclude(x => x.Zanr)
@@ -45,10 +51,38 @@ namespace FilmovizijaAPI.Controllers
             {
                 return NotFound();
             }
+
+            var prosecnaOcena = 0.0;
+            var korisnikovaOcena = 0;
+
+            if(await context.Ocene.AnyAsync(x=>x.FilmId == id))
+            {
+                prosecnaOcena = await context.Ocene.Where(x => x.FilmId == id).AverageAsync(x => x.Ocena);
+                if (HttpContext.User.Identity.IsAuthenticated)
+                {
+
+                    var email = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "email").Value;
+                    var user = await userManager.FindByEmailAsync(email);
+                    var userId = user.Id;
+
+                    var ocenaDb = await context.Ocene.FirstOrDefaultAsync(x => x.FilmId == id && x.KorisnikId == userId);
+                    if (ocenaDb != null)
+                    {
+                        korisnikovaOcena = ocenaDb.Ocena;
+                    }
+                }
+            }
+
+
             var filmDTO = mapper.Map<FilmDTO>(film);
+
+            filmDTO.ProsecnaOcena = prosecnaOcena;
+            filmDTO.KorisnikovaOcena = korisnikovaOcena;
+
             filmDTO.Glumci = filmDTO.Glumci.OrderBy(x => x.Redosled).ToList();
             return filmDTO;
-        }/*
+        }
+        /*
         [HttpGet]
         public async Task<ActionResult<PocetnaDTO>> Get()
         {
@@ -70,6 +104,7 @@ namespace FilmovizijaAPI.Controllers
             return pocetnaDTO;
         }*/
         [HttpGet("ubioskopima")]
+        [AllowAnonymous]
         public ActionResult<List<FilmDTO>> UBioskopima()
         {
             List<Film> filmovi = context.Filmovi.Where(film => film.PrikazujeSe)
@@ -79,6 +114,7 @@ namespace FilmovizijaAPI.Controllers
         }
 
         [HttpGet("uskoroizlaze")]
+        [AllowAnonymous]
         public ActionResult<List<FilmDTO>> UskoroIzlaze()
         {
             var danas = DateTime.Today;
@@ -127,6 +163,7 @@ namespace FilmovizijaAPI.Controllers
         }
 
         [HttpGet("filter")]
+        [AllowAnonymous]
         public async Task<ActionResult<List<FilmDTO>>> Filter([FromQuery] FilterFilmovaDTO filterFilmovaDTO)
         {
             var filmoviQueryable = context.Filmovi.AsQueryable();

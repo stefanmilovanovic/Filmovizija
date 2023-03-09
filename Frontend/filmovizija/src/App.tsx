@@ -8,7 +8,10 @@ import { claim } from "./auth/auth.model";
 import AutentifikacijaContext from "./auth/AutentifikacijaContext";
 import Greska403 from "./komponente/ostalo/Greska403";
 import { getClaims } from "./auth/handleJWT";
+import configureInterceptor from "./komponente/ostalo/httpInterceptors";
 //import "./css/Paginacija.css";
+
+configureInterceptor();
 
 function App() {
   const [claims, setClaims] = React.useState<claim[]>([]);
@@ -21,7 +24,7 @@ function App() {
     // provera da li je korisnik admin
     return (
       claims.findIndex(
-        (claim) => claim.name === "rola" && claim.value === "admin"
+        (claim) => claim.name === "role" && claim.value === "admin"
       ) > -1
     );
   }

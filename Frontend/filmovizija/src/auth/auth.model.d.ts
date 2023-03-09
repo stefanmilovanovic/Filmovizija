@@ -12,3 +12,8 @@ export interface authenticationResponse{
     token:string;
     expiration: Date;
 }
+
+export interface korisnikDTO{
+    id:string;
+    email:string;
+}

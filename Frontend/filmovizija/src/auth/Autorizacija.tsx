@@ -9,13 +9,13 @@ export default function Autorizacija(props: autorizacijaProps) {
   React.useEffect(() => {
     if (props.rola) {
       const index = claims.findIndex(
-        (claim) => claim.name === "rola" && claim.value === props.rola
+        (claim) => claim.name === "role" && claim.value === props.rola
       );
       setAutorizovan(index > -1);
     } else {
       setAutorizovan(claims.length > 0);
     }
-  }, [claims,props.rola]);
+  }, [claims, props.rola]);
 
   return <>{autorizovan ? props.autorizovan : props.nijeAutorizovan}</>;
 }
